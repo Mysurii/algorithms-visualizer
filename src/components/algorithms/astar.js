@@ -11,14 +11,10 @@ const AStar = (startNode, endNode) => {
     openSet.forEach((node, idx) => {
       if (node.f < openSet[leastIdx].f) leastIdx = idx;
     });
-    // for (let i = 0; i < openSet.length; i++) {
-    //   if (openSet[i].f < openSet[leastIdx].f) {
-    //     leastIdx = i;
-    //   }
-    // }
 
     let current = openSet[leastIdx];
     visitedNodes.push(current);
+
     if (current === endNode) {
       let temp = current;
       path.push(current);
@@ -26,16 +22,15 @@ const AStar = (startNode, endNode) => {
         path.push(temp.previous);
         temp = temp.previous;
       }
-
       return { path, visitedNodes };
     }
 
-    openSet = openSet.filter((elt) => elt !== current);
+    openSet = openSet.filter((node) => node !== current);
     closedSet.push(current);
 
     let neighbours = current.neighbours;
-    for (let i = 0; i < neighbours.length; i++) {
-      let neighbour = neighbours[i];
+
+    neighbours.forEach((neighbour) => {
       if (!closedSet.includes(neighbour) && !neighbour.isWall) {
         let tempG = current.g + 1;
         let newPath = false;
@@ -52,11 +47,11 @@ const AStar = (startNode, endNode) => {
 
         if (newPath) {
           neighbour.h = heuristic(neighbour, endNode);
-          neighbour.f = neighbour.h + neighbour.f;
+          neighbour.f = neighbour.g + neighbour.h;
           neighbour.previous = current;
         }
       }
-    }
+    });
   }
   return { path, visitedNodes, error: "No path found!" };
 };

@@ -1,4 +1,4 @@
-import { Container } from "./Node.styles";
+import { Container, End, Start } from "./Node.styles";
 
 const Node = ({ col }) => {
   return (
@@ -7,7 +7,10 @@ const Node = ({ col }) => {
       isStart={col.isStart}
       isEnd={col.isEnd}
       isWall={col.isWall}
-    ></Container>
+    >
+      {col.isStart && <Start />}
+      {col.isEnd && <End />}
+    </Container>
   );
 };
 
