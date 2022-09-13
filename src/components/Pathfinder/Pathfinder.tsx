@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cell, {
   NODE_END_COL,
   NODE_END_ROW,
@@ -8,12 +8,11 @@ import Cell, {
 import AStar from "../algorithms/astar";
 import Node from "../Node/Node";
 import { Container, Row } from "./Pathfinder.styles";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
-const Pathfinder = () => {
-  const [grid, setGrid] = useState([]);
-  const [path, setPath] = useState([]);
-  const [visitedNodes, setVisitedNodes] = useState([]);
+const Pathfinder: React.FC = () => {
+  const [grid, setGrid] = useState<Array<Array<Cell>>>([]);
+  const [path, setPath] = useState<Array<any>>([]);
+  const [visitedNodes, setVisitedNodes] = useState<Array<Cell>>([]);
   const [isPressed, setIsPressed] = useState(false);
   const [startCoordinates, setStartCoordinates] = useState({ row: 0, col: 0 });
   const [finishCoordinates, setFinishCoordinates] = useState({
@@ -22,8 +21,8 @@ const Pathfinder = () => {
   });
   const [isErasing, setIsErasing] = useState(false);
 
-  const updateGridWithWalls = (row, col, makeWall = true) => {
-    const node = grid[row][col];
+  const updateGridWithWalls = (row: number, col: number, makeWall = true) => {
+    const node: Cell = grid[row][col];
     node.isWall = makeWall;
     const newGrid = [...grid];
     newGrid[row][col] = node;
@@ -31,7 +30,7 @@ const Pathfinder = () => {
     addNeighbours(grid);
   };
 
-  const findPath = (arr) => {
+  const findPath = (arr: Array<Array<Cell>>) => {
     const startNode = arr[0][0];
     const endNode = arr[NODE_END_ROW][NODE_END_COL];
 
@@ -40,12 +39,12 @@ const Pathfinder = () => {
     setVisitedNodes(foundPath.visitedNodes);
   };
 
-  const handleMouseDown = (e, row, col) => {
+  const handleMouseDown = (e: React.MouseEvent, row: number, col: number) => {
     e.preventDefault();
     setIsPressed(true);
     if (
       (row == startCoordinates.row && col === startCoordinates.row) ||
-      (row == finishCoordinates.row && col === col.finishCoordinates)
+      (row == finishCoordinates.row && col === finishCoordinates.col)
     )
       return;
 
@@ -54,11 +53,11 @@ const Pathfinder = () => {
       updateGridWithWalls(row, col, false);
     } else updateGridWithWalls(row, col);
   };
-  const handleMouseEnter = (row, col) => {
+  const handleMouseEnter = (row: number, col: number) => {
     if (
       !isPressed ||
       (row == startCoordinates.row && col === startCoordinates.row) ||
-      (row == finishCoordinates.row && col === col.finishCoordinates)
+      (row == finishCoordinates.row && col === finishCoordinates.col)
     )
       return;
 
@@ -90,7 +89,7 @@ const Pathfinder = () => {
     findPath(arr);
   };
 
-  const addNeighbours = (arr) => {
+  const addNeighbours = (arr: Array<Array<Cell>>) => {
     arr.forEach((rows) => {
       rows.forEach((cell) => {
         cell.addNeighbours(arr);
@@ -98,18 +97,18 @@ const Pathfinder = () => {
     });
   };
 
+
   useEffect(() => {
     initializeGrid();
   }, []);
 
-  const visualizeShortestPath = (shortestPathNodes) => {
+  const visualizeShortestPath = (shortestPathNodes: Array<Cell>) => {
     console.log(shortestPathNodes.length);
     for (let i = 0; i < shortestPathNodes.length; i++) {
       setTimeout(() => {
         const node = shortestPathNodes[i];
         const test = document.getElementById(`node-${node.x}-${node.y}`);
-        test.classList.add("node-shortest-path");
-
+        test?.classList.add("node-shortest-path");
         console.log(test);
       }, 10 * i);
     }
@@ -125,8 +124,11 @@ const Pathfinder = () => {
       } else {
         setTimeout(() => {
           const node = visitedNodes[i];
-          const test = document.getElementById(`node-${node.x}-${node.y}`);
-          test.classList.add("node-visited");
+          if (node) {
+            const test = document.getElementById(`node-${node.x}-${node.y}`);
+            test?.classList.add("node-visited");
+          }
+
         }, 20 * i);
       }
     }

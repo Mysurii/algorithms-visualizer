@@ -1,8 +1,10 @@
-const AStar = (startNode, endNode) => {
-  let openSet = [];
-  let closedSet = [];
-  let path = [];
-  let visitedNodes = [];
+import Cell from "../../models/Cell";
+
+const AStar = (startNode: Cell, endNode: Cell) => {
+  let openSet: Array<Cell> = [];
+  let closedSet: Array<Cell> = [];
+  let path: Array<Cell> = [];
+  let visitedNodes: Array<Cell> = [];
 
   openSet.push(startNode);
   while (openSet.length > 0) {
@@ -56,7 +58,7 @@ const AStar = (startNode, endNode) => {
   return { path, visitedNodes, error: "No path found!" };
 };
 
-const heuristic = (a, b) => {
+const heuristic = (a: Cell, b: Cell) => {
   // Manhatten distance
   let d = Math.abs(a.x - a.y) + Math.abs(b.x - b.y);
   return d;

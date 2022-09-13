@@ -7,20 +7,25 @@ export const NODE_END_ROW = rows - 1;
 export const NODE_END_COL = cols - 1;
 
 class Cell {
-  constructor(x, y) {
+  x: number;
+  y: number;
+  g: number = 0;
+  f: number = 0;
+  h: number = 0;
+  isEnd: boolean;
+  isStart: boolean;
+  isWall: boolean = false;
+  previous: Cell | null = null;
+  neighbours: Array<Cell> = [];
+
+  constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
-    this.g = 0;
-    this.f = 0;
-    this.h = 0;
     this.isStart = this.x === NODE_START_ROW && this.y === NODE_START_COL;
     this.isEnd = this.x === NODE_END_ROW && this.y === NODE_END_COL;
-    this.neighbours = [];
-    this.isWall = false;
-    this.previous = null;
   }
 
-  addNeighbours = (grid) => {
+  addNeighbours = (grid: Array<Array<Cell>>) => {
     if (this.x > 0) this.neighbours.push(grid[this.x - 1][this.y]);
     if (this.x < rows - 1) this.neighbours.push(grid[this.x + 1][this.y]);
     if (this.y > 0) this.neighbours.push(grid[this.x][this.y - 1]);
