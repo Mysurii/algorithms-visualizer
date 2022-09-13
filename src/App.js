@@ -1,5 +1,11 @@
+import { Pathfinder } from "./components";
+
 function App() {
-  return <div>Hello World!</div>;
+  return (
+    <div>
+      <Pathfinder />
+    </div>
+  );
 }
 
 export default App;
