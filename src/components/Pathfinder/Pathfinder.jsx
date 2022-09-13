@@ -8,24 +8,30 @@ import Cell, {
 import AStar from "../algorithms/astar";
 import Node from "../Node/Node";
 import { Container, Row } from "./Pathfinder.styles";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const Pathfinder = () => {
   const [grid, setGrid] = useState([]);
   const [path, setPath] = useState([]);
   const [visitedNodes, setVisitedNodes] = useState([]);
+  const [isPressed, setIsPressed] = useState(false);
+  const [startCoordinates, setStartCoordinates] = useState({ row: 0, col: 0 });
+  const [finishCoordinates, setFinishCoordinates] = useState({
+    row: NODE_END_ROW,
+    col: NODE_END_COL,
+  });
+  const [isErasing, setIsErasing] = useState(false);
 
-  const initializeGrid = () => {
-    const arr = new Array(rows);
+  const updateGridWithWalls = (row, col, makeWall = true) => {
+    const node = grid[row][col];
+    node.isWall = makeWall;
+    const newGrid = [...grid];
+    newGrid[row][col] = node;
+    setGrid(newGrid);
+    addNeighbours(grid);
+  };
 
-    for (let i = 0; i < rows; i++) {
-      arr[i] = new Array(cols);
-    }
-
-    createSpot(arr);
-    setGrid(arr);
-
-    addNeighbours(arr);
-
+  const findPath = (arr) => {
     const startNode = arr[0][0];
     const endNode = arr[NODE_END_ROW][NODE_END_COL];
 
@@ -34,12 +40,54 @@ const Pathfinder = () => {
     setVisitedNodes(foundPath.visitedNodes);
   };
 
-  const createSpot = (arr) => {
+  const handleMouseDown = (e, row, col) => {
+    e.preventDefault();
+    setIsPressed(true);
+    if (
+      (row == startCoordinates.row && col === startCoordinates.row) ||
+      (row == finishCoordinates.row && col === col.finishCoordinates)
+    )
+      return;
+
+    if (e.button === 2) {
+      setIsErasing(true);
+      updateGridWithWalls(row, col, false);
+    } else updateGridWithWalls(row, col);
+  };
+  const handleMouseEnter = (row, col) => {
+    if (
+      !isPressed ||
+      (row == startCoordinates.row && col === startCoordinates.row) ||
+      (row == finishCoordinates.row && col === col.finishCoordinates)
+    )
+      return;
+
+    if (isErasing) {
+      updateGridWithWalls(row, col, false);
+    } else updateGridWithWalls(row, col);
+  };
+
+  const handleMouseUp = () => {
+    setIsPressed(false);
+    setIsErasing(false);
+
+    findPath(grid);
+  };
+
+  const initializeGrid = () => {
+    const arr = new Array(rows);
+
     for (let i = 0; i < rows; i++) {
+      arr[i] = new Array(cols);
       for (let j = 0; j < cols; j++) {
         arr[i][j] = new Cell(i, j);
       }
     }
+
+    setGrid(arr);
+    addNeighbours(arr);
+
+    findPath(arr);
   };
 
   const addNeighbours = (arr) => {
@@ -92,7 +140,15 @@ const Pathfinder = () => {
         {grid.map((row, rowIdx) => (
           <Row key={rowIdx}>
             {row.map((col, colIdx) => {
-              return <Node key={colIdx} col={col} />;
+              return (
+                <Node
+                  key={colIdx}
+                  col={col}
+                  onMouseDown={handleMouseDown}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseUp={handleMouseUp}
+                />
+              );
             })}
           </Row>
         ))}

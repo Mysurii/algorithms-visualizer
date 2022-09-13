@@ -1,5 +1,5 @@
-export const cols = 25;
-export const rows = 10;
+export const cols = 30;
+export const rows = 20;
 
 const NODE_START_ROW = 0;
 const NODE_START_COL = 0;
@@ -17,9 +17,6 @@ class Cell {
     this.isEnd = this.x === NODE_END_ROW && this.y === NODE_END_COL;
     this.neighbours = [];
     this.isWall = false;
-    if (!this.isStart && !this.isEnd && Math.random(1) < 0.2) {
-      this.isWall = true;
-    }
     this.previous = null;
   }
 
