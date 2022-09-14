@@ -1,3 +1,4 @@
+import React from "react";
 import { Pathfinder } from "./components";
 
 function App() {

@@ -22,7 +22,7 @@ export const Container = styled.div`
 
 export const Start = styled(IoMan)`
   font-size: 1.5rem;
-  cursor: move;
+  /* cursor: move; */
 `;
 
 export const End = styled(MdLocationOn)`
