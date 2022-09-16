@@ -1,7 +1,8 @@
 import React from "react";
 import Cell from "../../models/Cell";
-import { CoordinatesType } from "../Pathfinder/Pathfinder";
-import { Container, End, Start } from "./Node.styles";
+import { CoordinatesType } from "../../types/Coordinates";
+import { FinishIcon, StartIcon } from "../Draggable/Draggable.styles";
+import { Container } from "./Node.styles";
 
 interface props {
   col: Cell,
@@ -14,12 +15,16 @@ interface props {
 
 const Node: React.FC<props> = ({ col, setStart, setFinish, onMouseDown, onMouseEnter, onMouseUp }) => {
 
-  function allowDrop(ev: any) {
+  const allowDrop = (ev: any) => {
     ev.preventDefault();
   }
 
+  const eraseOnMouseDown = () => {
+    if (col.isStart || col.isEnd) return;
+    onMouseDown();
+  }
 
-  function drop(ev: any) {
+  const drop = (ev: any) => {
     const data = ev.dataTransfer.getData("type");
     console.log(data);
     data == CoordinatesType.START ? setStart(col.x, col.y) : setFinish(col.x, col.y)
@@ -39,8 +44,8 @@ const Node: React.FC<props> = ({ col, setStart, setFinish, onMouseDown, onMouseE
       onDragOver={allowDrop}
       onDrop={drop}
     >
-      {col.isStart && <Start draggable />}
-      {col.isEnd && <End />}
+      {col.isStart && <StartIcon draggable />}
+      {col.isEnd && <FinishIcon />}
     </Container>
   );
 };

@@ -1,10 +1,10 @@
-export const cols = 30;
+export const cols = 50;
 export const rows = 20;
 
-const NODE_START_ROW = 0;
-const NODE_START_COL = 0;
-export const NODE_END_ROW = rows - 1;
-export const NODE_END_COL = cols - 1;
+export const NODE_START_ROW = 10;
+export const NODE_START_COL = 15;
+export const NODE_END_ROW = 10;
+export const NODE_END_COL = 35;
 
 class Cell {
   x: number;

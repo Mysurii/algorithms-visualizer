@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import { MdLocationOn } from "react-icons/md";
-import { IoMan } from "react-icons/io5";
 
 export const Container = styled.div`
-  width: 40px;
-  height: 40px;
-  border: 1px solid black;
+  min-width: 25px;
+  min-height: 25px;
+  border: 1px solid lightblue;
   display: flex;
   justify-content: center;
   align-items: center;
+  /* outline: 1px solid rgb(175, 216, 248);
+  display: inline-block; */
 
   background-color: ${(props) =>
     props.isStart
@@ -16,16 +16,6 @@ export const Container = styled.div`
       : props.isEnd
       ? "rgba(100, 0, 0, 0.3)"
       : props.isWall
-      ? "black"
+      ? "rgb(12, 53, 71)"
       : ""};
-`;
-
-export const Start = styled(IoMan)`
-  font-size: 1.5rem;
-  /* cursor: move; */
-`;
-
-export const End = styled(MdLocationOn)`
-  font-size: 1.5rem;
-  cursor: move;
 `;
