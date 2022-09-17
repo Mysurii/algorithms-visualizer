@@ -7,22 +7,22 @@ import Cell, {
   NODE_START_ROW,
   NODE_START_COL,
 } from "../../models/Cell";
-import { ICoordinates, CoordinatesType } from "../../types/Coordinates";
-import AStar, { aster } from "../../algorithms/astar";
+import { ICoordinates, MouseType } from "../../types/Coordinates";
+import sortingAlgorithm from "../../algorithms/sorting";
 import Node from "../Node/Node";
-import { Container, GridContainer, Row } from "./Pathfinder.styles";
-import Draggable from "../Draggable/Draggable";
+import { Container, GridContainer, Row, SideNavContainer, StyledFlex, Text } from "./Pathfinder.styles";
+import { FinishIcon, StartIcon, StyledNode } from "../Node/Node.styles.js";
+import { Button } from "react-bootstrap";
 
 const Pathfinder: React.FC = () => {
-
+  const [mouseType, setMouseType] = useState(MouseType.WALL)
   const [grid, setGrid] = useState<Array<Array<Cell>>>([]);
-  const [isPressed, setIsPressed] = useState(false);
+  const [mouseIsPressed, setMouseIsPressed] = useState(false);
   const [startCoordinates, setStartCoordinates] = useState<ICoordinates>({ row: NODE_START_ROW, col: NODE_START_COL });
   const [finishCoordinates, setFinishCoordinates] = useState<ICoordinates>({
     row: NODE_END_ROW,
     col: NODE_END_COL,
   });
-  const [isErasing, setIsErasing] = useState(false);
 
 
   const updateGridWithWalls = (row: number, col: number, makeWall = true) => {
@@ -31,59 +31,43 @@ const Pathfinder: React.FC = () => {
     const newGrid = [...grid];
     newGrid[row][col] = node;
     setGrid(newGrid);
-    addNeighbours(grid);
   };
+
+  const handleType = (row: number, col: number) => {
+    switch (mouseType) {
+      case MouseType.WALL: return updateGridWithWalls(row, col);
+      case MouseType.UNVISITED: return updateGridWithWalls(row, col, false);
+      case MouseType.START: return setStart(row, col)
+      case MouseType.FINISH: return setFinish(row, col)
+      default: return
+    }
+  }
 
   const handleMouseDown = (e: React.MouseEvent, row: number, col: number) => {
     e.preventDefault();
-    setIsPressed(true);
+    setMouseIsPressed(true);
+    handleType(row, col)
 
-    if (e.button === 2) {
-      setIsErasing(true);
-      updateGridWithWalls(row, col, false);
-    } else updateGridWithWalls(row, col);
   };
 
   const handleMouseEnter = (row: number, col: number) => {
-    // if (isErasing) {
-    //   updateGridWithWalls(row, col, false);
-    // } else updateGridWithWalls(row, col);
+    if (!mouseIsPressed) return;
+    handleType(row, col);
   };
 
   const handleMouseUp = () => {
-    setIsPressed(false);
-    setIsErasing(false);
+    setMouseIsPressed(false);
   };
-
-
-  const addNeighbours = (arr: Array<Array<Cell>>) => {
-    arr.forEach((rows) => {
-      rows.forEach((cell) => {
-        cell.addNeighbours(arr);
-      });
-    });
-  };
-
 
   useEffect(() => {
-    setGrid(aster.initializeGrid(Math.round(rows), Math.round(cols)))
+    setGrid(sortingAlgorithm.initializeGrid(Math.round(rows), Math.round(cols)))
   }, []);
-
-  const visualizeShortestPath = (shortestPathNodes: Array<Cell>) => {
-    for (let i = 0; i < shortestPathNodes.length; i++) {
-      setTimeout(() => {
-        const node = shortestPathNodes[i];
-        const test = document.getElementById(`node-${node.x}-${node.y}`);
-        test?.classList.add("node", "node-shortest-path");
-      }, 10 * i);
-    }
-  };
 
   const visualizePath = () => {
     const startNode = grid[startCoordinates.row][startCoordinates.col];
     const endNode = grid[finishCoordinates.row][finishCoordinates.col];
 
-    let foundPath = AStar(startNode, endNode);
+    let foundPath = sortingAlgorithm.sort(startNode, endNode);
 
     const visitedNodes = foundPath.visitedNodes
     const shortestPath = foundPath.path
@@ -91,7 +75,13 @@ const Pathfinder: React.FC = () => {
     for (let i = 0; i <= visitedNodes.length; i++) {
       if (i === visitedNodes.length) {
         setTimeout(() => {
-          visualizeShortestPath(shortestPath);
+          for (let i = 0; i < shortestPath.length; i++) {
+            setTimeout(() => {
+              const node = shortestPath[i];
+              const test = document.getElementById(`node-${node.x}-${node.y}`);
+              test?.classList.add("node", "node-shortest-path");
+            }, 10 * i);
+          }
         }, 20 * i);
       } else {
         setTimeout(() => {
@@ -137,19 +127,38 @@ const Pathfinder: React.FC = () => {
   }
 
   const reset = () => {
-    setGrid(aster.initializeGrid(Math.round(rows), Math.round(cols)))
+    setGrid(sortingAlgorithm.initializeGrid(Math.round(rows), Math.round(cols)))
     const nodes = document.querySelectorAll(".node")
     nodes.forEach(node => node.classList.remove("node", "node-visited", "node-shortest-path"))
   }
 
-
   return (
     <Container>
-      <h1>Pathfinder</h1>
-      <button onClick={visualizePath}>Visualize</button>
-      <button onClick={reset}>Reset</button>
-      <Draggable type={CoordinatesType.START} />
-      <Draggable type={CoordinatesType.FINISH} />
+      <SideNavContainer>
+        <StyledFlex isActive={mouseType == MouseType.START} onClick={() => setMouseType(MouseType.START)}>
+          <StartIcon />
+          <Text>Start</Text>
+        </StyledFlex>
+        <StyledFlex isActive={mouseType == MouseType.FINISH} onClick={() => setMouseType(MouseType.FINISH)}>
+          <FinishIcon />
+          <Text>Finish</Text>
+        </StyledFlex>
+        <StyledFlex isActive={mouseType == MouseType.WALL} onClick={() => setMouseType(MouseType.WALL)}>
+          <StyledNode isWall />
+          <Text margin="0 5px">Wall Node</Text>
+        </StyledFlex>
+        <StyledFlex isActive={mouseType == MouseType.UNVISITED} onClick={() => setMouseType(MouseType.UNVISITED)}>
+          <StyledNode />
+          <Text margin="0 5px">Unvisited Node</Text>
+        </StyledFlex>
+        <StyledFlex>
+          <Button variant="danger" onClick={reset} style={{ marginRight: '10px' }}>Reset</Button>
+          <Button variant="primary" onClick={visualizePath}>Visualize</Button>
+        </StyledFlex>
+
+
+      </SideNavContainer>
+
       <GridContainer>
         {grid.map((row, rowIdx) => (
           <Row key={rowIdx}>
@@ -158,8 +167,6 @@ const Pathfinder: React.FC = () => {
                 <Node
                   key={colIdx}
                   col={col}
-                  setStart={setStart}
-                  setFinish={setFinish}
                   onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter}
                   onMouseUp={handleMouseUp}

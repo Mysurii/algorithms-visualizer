@@ -1,8 +1,10 @@
 import Cell from "../models/Cell";
 
-export enum CoordinatesType {
+export enum MouseType {
   START,
   FINISH,
+  WALL,
+  UNVISITED,
 }
 
 export interface ICoordinates {
