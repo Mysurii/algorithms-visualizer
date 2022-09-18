@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Cell, {
   NODE_END_COL,
   NODE_END_ROW,
@@ -10,9 +10,11 @@ import Cell, {
 import { ICoordinates, MouseType } from "../../types/Coordinates";
 import sortingAlgorithm from "../../algorithms/sorting";
 import Node from "../Node/Node";
-import { Container, GridContainer, Row, SideNavContainer, StyledFlex, Text } from "./Pathfinder.styles";
+import { Container, GridContainer, Highlight, Row, SideNavContainer, StyledFlex, Text } from "./Pathfinder.styles";
 import { FinishIcon, StartIcon, StyledNode } from "../Node/Node.styles.js";
 import { Button } from "react-bootstrap";
+import { AlgorithmsContext, AlgorithmContextType } from "../../contexts/AlgorithmsContext";
+import { AlgorithmTypes } from "../../types/algorithm";
 
 const Pathfinder: React.FC = () => {
   const [mouseType, setMouseType] = useState(MouseType.WALL)
@@ -23,6 +25,8 @@ const Pathfinder: React.FC = () => {
     row: NODE_END_ROW,
     col: NODE_END_COL,
   });
+
+  const { currentAlgorithm } = useContext(AlgorithmsContext) as AlgorithmContextType;
 
 
   const updateGridWithWalls = (row: number, col: number, makeWall = true) => {
@@ -67,7 +71,7 @@ const Pathfinder: React.FC = () => {
     const startNode = grid[startCoordinates.row][startCoordinates.col];
     const endNode = grid[finishCoordinates.row][finishCoordinates.col];
 
-    let foundPath = sortingAlgorithm.sort(startNode, endNode);
+    let foundPath = sortingAlgorithm.sort(startNode, endNode, currentAlgorithm === AlgorithmTypes.DIJKSTRA);
 
     const visitedNodes = foundPath.visitedNodes
     const shortestPath = foundPath.path
@@ -101,7 +105,7 @@ const Pathfinder: React.FC = () => {
 
     grid.forEach(row => {
       row.forEach(col => {
-        col.isStart = (col.x == x && col.y == y) ? true : false
+        col.isStart = (col.x === x && col.y === y) ? true : false
       })
       newGrid.push(row)
     })
@@ -116,7 +120,7 @@ const Pathfinder: React.FC = () => {
 
     grid.forEach(row => {
       row.forEach(col => {
-        col.isEnd = (col.x == x && col.y == y) ? true : false
+        col.isEnd = (col.x === x && col.y === y) ? true : false
       })
       newGrid.push(row)
     })
@@ -135,19 +139,19 @@ const Pathfinder: React.FC = () => {
   return (
     <Container>
       <SideNavContainer>
-        <StyledFlex isActive={mouseType == MouseType.START} onClick={() => setMouseType(MouseType.START)}>
+        <StyledFlex isActive={mouseType === MouseType.START} onClick={() => setMouseType(MouseType.START)}>
           <StartIcon />
           <Text>Start</Text>
         </StyledFlex>
-        <StyledFlex isActive={mouseType == MouseType.FINISH} onClick={() => setMouseType(MouseType.FINISH)}>
+        <StyledFlex isActive={mouseType === MouseType.FINISH} onClick={() => setMouseType(MouseType.FINISH)}>
           <FinishIcon />
           <Text>Finish</Text>
         </StyledFlex>
-        <StyledFlex isActive={mouseType == MouseType.WALL} onClick={() => setMouseType(MouseType.WALL)}>
+        <StyledFlex isActive={mouseType === MouseType.WALL} onClick={() => setMouseType(MouseType.WALL)}>
           <StyledNode isWall />
           <Text margin="0 5px">Wall Node</Text>
         </StyledFlex>
-        <StyledFlex isActive={mouseType == MouseType.UNVISITED} onClick={() => setMouseType(MouseType.UNVISITED)}>
+        <StyledFlex isActive={mouseType === MouseType.UNVISITED} onClick={() => setMouseType(MouseType.UNVISITED)}>
           <StyledNode />
           <Text margin="0 5px">Unvisited Node</Text>
         </StyledFlex>
@@ -158,6 +162,7 @@ const Pathfinder: React.FC = () => {
 
 
       </SideNavContainer>
+      <Highlight>~~{currentAlgorithm}~~</Highlight>
 
       <GridContainer>
         {grid.map((row, rowIdx) => (

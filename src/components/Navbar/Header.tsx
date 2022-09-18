@@ -29,7 +29,7 @@ const Header = () => {
                     </Nav>
                     <Nav>
                         <NavDropdown title="Pathfinding" id="collasible-nav-dropdown">
-                            {pathfinding.map(algorithm => <NavDropdown.Item onClick={() => setCurrentAlgorithm(algorithm.type)} active={currentAlgorithm == algorithm.type}>
+                            {pathfinding.map(algorithm => <NavDropdown.Item onClick={() => setCurrentAlgorithm(algorithm.type)} active={currentAlgorithm === algorithm.type}>
                                 {algorithm.name}
                             </NavDropdown.Item>)}
                         </NavDropdown>

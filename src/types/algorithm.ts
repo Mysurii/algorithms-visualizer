@@ -1,6 +1,6 @@
 export enum AlgorithmTypes {
-  ASTAR,
-  DIJKSTRA,
-  DFS,
-  BFS,
+  ASTAR = "Astar",
+  DIJKSTRA = "Dijkstra",
+  DFS = "DFS",
+  BFS = "BFS",
 }

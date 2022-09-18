@@ -54,49 +54,8 @@ export const StyledFlex = styled(Flex)`
   border-bottom: ${(props) => (props.isActive ? "2px solid lightblue" : "")};
 `;
 
-export const Button = styled.button`
-  position: relative;
-  padding: 1em 1.5em;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  outline: none;
-  font-size: 18px;
-  margin: 1em 0.8em;
-
-  &::before,
-  &::after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 20%;
-    height: 20%;
-    border: 2px solid;
-    transition: all 0.6s ease;
-    border-radius: 2px;
-  }
-
-  &::before {
-    top: 0;
-    left: 0;
-    border-bottom-color: transparent;
-    border-right-color: transparent;
-    border-top-color: black;
-    border-left-color: black;
-  }
-
-  &::after {
-    bottom: 0;
-    right: 0;
-    border-top-color: transparent;
-    border-left-color: transparent;
-    border-bottom-color: black;
-    border-right-color: black;
-  }
-
-  &:hover:after,
-  &:hover:before {
-    width: 100%;
-    height: 100%;
-  }
+export const Highlight = styled(Text)`
+  font-size: 1.4rem;
+  color: #0275d8;
+  font-weight: bold;
 `;
