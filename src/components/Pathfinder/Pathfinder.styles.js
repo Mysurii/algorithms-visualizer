@@ -51,7 +51,12 @@ export const StyledFlex = styled(Flex)`
   height: 100%;
   position: relative;
   cursor: pointer;
-  border-bottom: ${(props) => (props.isActive ? "2px solid lightblue" : "")};
+  border-bottom: ${(props) => (props.isActive ? "2px solid #0275d8" : "")};
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
 `;
 
 export const Highlight = styled(Text)`

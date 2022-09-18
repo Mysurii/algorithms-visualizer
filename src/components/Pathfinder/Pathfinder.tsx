@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Cell, {
   NODE_END_COL,
   NODE_END_ROW,
@@ -12,9 +12,12 @@ import sortingAlgorithm from "../../algorithms/sorting";
 import Node from "../Node/Node";
 import { Container, GridContainer, Highlight, Row, SideNavContainer, StyledFlex, Text } from "./Pathfinder.styles";
 import { FinishIcon, StartIcon, StyledNode } from "../Node/Node.styles.js";
-import { Button } from "react-bootstrap";
 import { AlgorithmsContext, AlgorithmContextType } from "../../contexts/AlgorithmsContext";
 import { AlgorithmTypes } from "../../types/algorithm";
+import { breadthFirstSearch } from "../../algorithms/breadtFirstSearch";
+import Overlay from "react-bootstrap/esm/Overlay";
+import Tooltip from "react-bootstrap/esm/Tooltip";
+import OverlayTrigger from "react-bootstrap/esm/OverlayTrigger";
 
 const Pathfinder: React.FC = () => {
   const [mouseType, setMouseType] = useState(MouseType.WALL)
@@ -25,8 +28,8 @@ const Pathfinder: React.FC = () => {
     row: NODE_END_ROW,
     col: NODE_END_COL,
   });
-
-  const { currentAlgorithm } = useContext(AlgorithmsContext) as AlgorithmContextType;
+  const target = useRef(null);
+  const { currentAlgorithm, isResetClicked, setIsResetClicked, isVisualizeClicked, setIsVisualizeClicked } = useContext(AlgorithmsContext) as AlgorithmContextType;
 
 
   const updateGridWithWalls = (row: number, col: number, makeWall = true) => {
@@ -72,40 +75,47 @@ const Pathfinder: React.FC = () => {
     const endNode = grid[finishCoordinates.row][finishCoordinates.col];
 
     let foundPath = sortingAlgorithm.sort(startNode, endNode, currentAlgorithm === AlgorithmTypes.DIJKSTRA);
-
     const visitedNodes = foundPath.visitedNodes
     const shortestPath = foundPath.path
 
-    for (let i = 0; i <= visitedNodes.length; i++) {
-      if (i === visitedNodes.length) {
-        setTimeout(() => {
-          for (let i = 0; i < shortestPath.length; i++) {
-            setTimeout(() => {
-              const node = shortestPath[i];
+    return new Promise((resolve) => {
+      for (let i = 0; i <= visitedNodes.length; i++) {
+        if (i === visitedNodes.length) {
+          setTimeout(() => {
+            for (let i = 0; i < shortestPath.length; i++) {
+              setTimeout(() => {
+                const node = shortestPath[i];
+                const test = document.getElementById(`node-${node.x}-${node.y}`);
+                test?.classList.add("node", "node-shortest-path");
+              }, 10 * i);
+            }
+          }, 20 * i);
+        } else {
+          setTimeout(() => {
+            const node = visitedNodes[i];
+            if (node) {
               const test = document.getElementById(`node-${node.x}-${node.y}`);
-              test?.classList.add("node", "node-shortest-path");
-            }, 10 * i);
-          }
-        }, 20 * i);
-      } else {
-        setTimeout(() => {
-          const node = visitedNodes[i];
-          if (node) {
-            const test = document.getElementById(`node-${node.x}-${node.y}`);
-            test?.classList.add("node", "node-visited");
-          }
+              test?.classList.add("node", "node-visited");
+            }
 
-        }, 20 * i);
+          }, 20 * i);
+
+        }
       }
-    }
-  };
+
+      setTimeout(() => {
+        resolve(true)
+
+      }, 20 * visitedNodes.length)
+    })
+  }
 
   const setStart = (x: number, y: number) => {
     const newGrid: Array<Array<Cell>> = [];
 
     grid.forEach(row => {
       row.forEach(col => {
-        col.isStart = (col.x === x && col.y === y) ? true : false
+        col.isStart = (col.x === x && col.y === y)
       })
       newGrid.push(row)
     })
@@ -120,7 +130,7 @@ const Pathfinder: React.FC = () => {
 
     grid.forEach(row => {
       row.forEach(col => {
-        col.isEnd = (col.x === x && col.y === y) ? true : false
+        col.isEnd = (col.x === x && col.y === y) 
       })
       newGrid.push(row)
     })
@@ -130,19 +140,61 @@ const Pathfinder: React.FC = () => {
     setFinishCoordinates({ row: x, col: y })
   }
 
-  const reset = () => {
-    setGrid(sortingAlgorithm.initializeGrid(Math.round(rows), Math.round(cols)))
-    const nodes = document.querySelectorAll(".node")
-    nodes.forEach(node => node.classList.remove("node", "node-visited", "node-shortest-path"))
+  const handleReset = () => {
+    if (isResetClicked) {
+      setGrid(sortingAlgorithm.initializeGrid(Math.round(rows), Math.round(cols)))
+      const nodes = document.querySelectorAll(".node")
+      nodes.forEach(node => node.classList.remove("node", "node-visited", "node-shortest-path"))
+      setIsResetClicked(false)
+    }
   }
+
+  const handleVisualize = async () => {
+    if (isVisualizeClicked) {
+      await visualizePath()
+      setIsVisualizeClicked(false)
+    }
+  }
+
+  handleVisualize()
+  handleReset()
+
+  const doBFS = () => {
+    const test = breadthFirstSearch(grid[startCoordinates.row][startCoordinates.col], grid[finishCoordinates.row][finishCoordinates.col])
+    console.log(test)
+  }
+
 
   return (
     <Container>
       <SideNavContainer>
-        <StyledFlex isActive={mouseType === MouseType.START} onClick={() => setMouseType(MouseType.START)}>
+
+        {currentAlgorithm == AlgorithmTypes.DIJKSTRA ? <OverlayTrigger
+          placement='top'
+          overlay={
+            <Tooltip>
+              Dijkstra has a bug with start position. For now, you can't move start.
+            </Tooltip>
+          }
+        >
+          <StyledFlex isActive={mouseType === MouseType.START} onClick={() => setMouseType(MouseType.FINISH)}>
+            <StartIcon />
+            <Text>Start</Text>
+          </StyledFlex>
+        </OverlayTrigger> : <StyledFlex isActive={mouseType === MouseType.START} onClick={() => setMouseType(MouseType.START)}>
           <StartIcon />
           <Text>Start</Text>
-        </StyledFlex>
+        </StyledFlex>}
+
+
+
+
+        <Overlay target={target.current} show={true} placement="right">
+          {(props) => (
+            <Tooltip  {...props}>
+              My Tooltip
+            </Tooltip>
+          )}</Overlay>
         <StyledFlex isActive={mouseType === MouseType.FINISH} onClick={() => setMouseType(MouseType.FINISH)}>
           <FinishIcon />
           <Text>Finish</Text>
@@ -155,12 +207,7 @@ const Pathfinder: React.FC = () => {
           <StyledNode />
           <Text margin="0 5px">Unvisited Node</Text>
         </StyledFlex>
-        <StyledFlex>
-          <Button variant="danger" onClick={reset} style={{ marginRight: '10px' }}>Reset</Button>
-          <Button variant="primary" onClick={visualizePath}>Visualize</Button>
-        </StyledFlex>
-
-
+        <button onClick={doBFS}>do BFS</button>
       </SideNavContainer>
       <Highlight>~~{currentAlgorithm}~~</Highlight>
 

@@ -17,6 +17,7 @@ class Cell {
   isWall: boolean = false;
   previous: Cell | null = null;
   neighbours: Array<Cell> = [];
+  isVisited: boolean = false;
 
   constructor(x: number, y: number) {
     this.x = x;

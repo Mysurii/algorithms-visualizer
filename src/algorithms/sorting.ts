@@ -26,8 +26,10 @@ const sortingAlgorithm = {
     let closedSet: Array<Cell> = [];
     let path: Array<Cell> = [];
     let visitedNodes: Array<Cell> = [];
-
+    console.log(startNode);
+    console.log(endNode);
     openSet.push(startNode);
+
     while (openSet.length > 0) {
       let leastIdx = 0;
 
