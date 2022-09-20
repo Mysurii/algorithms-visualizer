@@ -52,13 +52,14 @@ const Pathfinder: React.FC = () => {
 
   const handleMouseDown = (e: React.MouseEvent, row: number, col: number) => {
     e.preventDefault();
+    if (isVisualizeClicked) return;
     setMouseIsPressed(true);
     handleType(row, col)
 
   };
 
   const handleMouseEnter = (row: number, col: number) => {
-    if (!mouseIsPressed) return;
+    if (!mouseIsPressed || isVisualizeClicked) return;
     handleType(row, col);
   };
 
