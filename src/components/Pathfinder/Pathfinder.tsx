@@ -188,14 +188,6 @@ const Pathfinder: React.FC = () => {
         </StyledFlex>}
 
 
-
-
-        <Overlay target={target.current} show={true} placement="right">
-          {(props) => (
-            <Tooltip  {...props}>
-              My Tooltip
-            </Tooltip>
-          )}</Overlay>
         <StyledFlex isActive={mouseType === MouseType.FINISH} onClick={() => setMouseType(MouseType.FINISH)}>
           <FinishIcon />
           <Text>Finish</Text>

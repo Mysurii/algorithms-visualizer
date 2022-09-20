@@ -19,7 +19,7 @@ export const GridContainer = styled.div`
   flex-direction: column;
   width: 100%;
   width: fit-content;
-  border: double lightblue;
+  border: double #f5f5f5;
 `;
 
 export const SideNavContainer = styled.div`
