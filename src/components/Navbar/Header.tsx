@@ -20,9 +20,7 @@ const Header = () => {
     const { algorithmsStore: { currentAlgorithm, isVisualizeClicked, setIsResetClicked, setIsVisualizeClicked, setCurrentAlgorithm } } = useStores();
 
     const handleVisualize = () => {
-        if (!isVisualizeClicked) {
-            setIsVisualizeClicked(true);
-        }
+        setIsVisualizeClicked(true);
     }
 
     const handleReset = () => {

@@ -51,4 +51,5 @@ export const Highlight = styled.p`
   font-size: 1.4rem;
   color: #0275d8;
   font-weight: bold;
+  user-select: none;
 `;

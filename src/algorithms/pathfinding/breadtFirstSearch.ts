@@ -1,10 +1,8 @@
 import Cell from "../../models/Cell";
 
 export function breadthFirstSearch(startNode: Cell, finishNode: Cell) {
-  // if (!startNode || !finishNode || startNode === finishNode) {
-  //   return { path: [], visitedNodes: [] };
-  // }
-  let path: Array<Cell> = [];
+  console.log(startNode);
+  console.log(finishNode);
   let unvisitedNodes = [startNode];
   let visitedNodesInOrder = [];
 

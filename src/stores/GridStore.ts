@@ -38,20 +38,15 @@ export class GridStore implements IGridStore {
     });
   };
 
-  resetKeepWalls = () => {
-    runInAction(() => {
-      const grid = initializeGrid();
-      for (let rows of this.grid) {
-        for (let col of rows) {
-          const newCell = new Cell(col.x, col.y);
-          newCell.isWall = col.isWall;
-          newCell.isStart = col.isStart;
-          newCell.isEnd = col.isEnd;
-          grid[col.x][col.y] = newCell;
-        }
+  resetVisited = () => {
+    // const newGrid = initializeGrid();
+
+    for (let rows of this.grid) {
+      for (let cell of rows) {
+        cell.isVisited = false;
+        this.grid[cell.x][cell.y] = cell;
       }
-      this.grid = grid;
-    });
+    }
   };
 
   setFinish = (

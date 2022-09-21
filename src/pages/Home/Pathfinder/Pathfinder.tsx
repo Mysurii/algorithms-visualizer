@@ -15,7 +15,7 @@ const Pathfinder: React.FC = () => {
   const [isErase, setIsErase] = useState(false);
 
   const { algorithmsStore: { currentAlgorithm, isResetClicked, isVisualizeClicked, setIsResetClicked, setIsVisualizeClicked },
-    gridStore: { grid, resetGrid, resetKeepWalls, updateGridWithWalls, startCoordinates, finishCoordinates }
+    gridStore: { grid, resetGrid, resetVisited, updateGridWithWalls, startCoordinates, finishCoordinates }
   } = useStores();
 
   const handleType = (row: number, col: number) => {
@@ -105,12 +105,11 @@ const Pathfinder: React.FC = () => {
   }
 
   const handleVisualize = async () => {
-    console.log('vusualizing')
     if (isVisualizeClicked) {
       const nodes = document.querySelectorAll(".node")
       if (nodes.length > 0) {
+        if (currentAlgorithm === AlgorithmTypes.BFS) resetVisited();
         removeColors();
-        resetKeepWalls();
       }
       await visualizePath()
       setIsVisualizeClicked(false)
