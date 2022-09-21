@@ -12,7 +12,6 @@ const pathfinding = [
     { name: "Astar", type: AlgorithmTypes.ASTAR },
     { name: "Dijkstra", type: AlgorithmTypes.DIJKSTRA },
     { name: "BFS", type: AlgorithmTypes.BFS },
-    { name: "DFS", type: AlgorithmTypes.DFS },
 ];
 
 
