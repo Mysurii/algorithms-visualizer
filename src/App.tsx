@@ -9,8 +9,9 @@ function App() {
   return (
     <StoreProvider store={new RootStore()}>
       <>
-        <Header />
         <Router>
+          <Header />
+
           <Routes>
             <Route path="/" element={<Pathfinder />} />
             <Route path="/sorting" element={<Sorter />} />

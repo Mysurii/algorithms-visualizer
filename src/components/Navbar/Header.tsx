@@ -12,6 +12,7 @@ import mergeSort from "../../algorithms/sorting/merge";
 import quickSort from "../../algorithms/sorting/quick";
 import insertion from "../../algorithms/sorting/insertion";
 import selection from "../../algorithms/sorting/selection";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const pathfinding = [
     { name: "Astar", type: AlgorithmTypes.ASTAR },
@@ -20,7 +21,7 @@ const pathfinding = [
 ];
 
 const sorting = [
-    { name: "Bubble", type: AlgorithmTypes.BUBBLE },
+    { name: "Bubble Sort", type: AlgorithmTypes.BUBBLE },
     { name: "Quicksort", type: AlgorithmTypes.QUICK },
     { name: "Insertion Sort", type: AlgorithmTypes.INSERTION },
     { name: "Selection Sort", type: AlgorithmTypes.SELECTION },
@@ -28,6 +29,9 @@ const sorting = [
 ];
 
 const Header = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const { algorithmsStore: { currentAlgorithm, isVisualizeClicked, setIsResetClicked, setIsVisualizeClicked, setCurrentAlgorithm },
         sorterStore: { delay, createNewArray } } = useStores();
 
@@ -63,6 +67,12 @@ const Header = () => {
         createNewArray();
     }
 
+    const handleAlgorithm = (algorithm: AlgorithmTypes) => {
+        setCurrentAlgorithm(algorithm)
+        if (location.pathname === "/sorting" && !sorting.map(x => x.type).includes(algorithm)) navigate("/");
+        if (location.pathname === "/" && !pathfinding.map(x => x.type).includes(algorithm)) navigate("/sorting")
+    }
+
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
@@ -83,18 +93,19 @@ const Header = () => {
 
                     <Nav>
                         <NavDropdown title="Pathfinding" id="collasible-nav-dropdown">
-                            <>
-                            {pathfinding.map(algorithm => <NavDropdown.Item key={algorithm.name} onClick={() => setCurrentAlgorithm(algorithm.type)} active={currentAlgorithm === algorithm.type}>
+
+
+                            {pathfinding.map(algorithm => <NavDropdown.Item key={algorithm.name} onClick={() => handleAlgorithm(algorithm.type)} active={currentAlgorithm === algorithm.type}>
                                 {algorithm.name}
                             </NavDropdown.Item>)}
-                            </>
+
+
                         </NavDropdown>
                         <NavDropdown title="Sorting" id="collasible-nav-dropdown2">
-                            <>
-                                {sorting.map(algorithm => <NavDropdown.Item key={algorithm.name} onClick={() => setCurrentAlgorithm(algorithm.type)} active={currentAlgorithm === algorithm.type}>
+
+                            {sorting.map(algorithm => <NavDropdown.Item key={algorithm.name} onClick={() => handleAlgorithm(algorithm.type)} active={currentAlgorithm === algorithm.type}>
                                     {algorithm.name}
-                                </NavDropdown.Item>)}
-                            </>
+                            </NavDropdown.Item>)}
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>

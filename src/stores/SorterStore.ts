@@ -8,7 +8,7 @@ interface ISorter {
 }
 
 class SorterStore implements ISorter {
-  delay = 260;
+  delay = 500;
   arraySize = 60;
   bars: HTMLDivElement[] = [];
   started = false;
@@ -22,6 +22,15 @@ class SorterStore implements ISorter {
       createNewArray: action,
     });
   }
+
+  setDelay = (delay: number) => {
+    this.delay = delay;
+  };
+
+  setArraySize = (arraySize: number) => {
+    this.arraySize = arraySize;
+    this.createNewArray();
+  };
 
   deleteArray = () => {
     const bars = document.querySelector("#bars");
