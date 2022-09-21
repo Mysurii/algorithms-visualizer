@@ -32,6 +32,19 @@ class Cell {
     if (this.y > 0) this.neighbours.push(grid[this.x][this.y - 1]);
     if (this.y < cols - 1) this.neighbours.push(grid[this.x][this.y + 1]);
   };
+
+  getNeighbour = (): Cell | undefined => {
+    const unvisitedNeigbours: Array<Cell> = [];
+
+    this.neighbours.forEach((neighbour) => {
+      if (!neighbour.isVisited) unvisitedNeigbours.push(neighbour);
+    });
+
+    if (unvisitedNeigbours.length > 0) {
+      const idx = Math.floor(Math.random() * unvisitedNeigbours.length);
+      return unvisitedNeigbours[idx];
+    }
+  };
 }
 
 export default Cell;

@@ -1,18 +1,23 @@
-import Cell from "../models/Cell";
+import Cell from "../../models/Cell";
 
 export function breadthFirstSearch(startNode: Cell, finishNode: Cell) {
-  if (!startNode || !finishNode || startNode === finishNode) {
-    return false;
-  }
-  let visited = [];
-  let unvisitedNodes = [];
+  // if (!startNode || !finishNode || startNode === finishNode) {
+  //   return { path: [], visitedNodes: [] };
+  // }
+  let path: Array<Cell> = [];
+  let unvisitedNodes = [startNode];
   let visitedNodesInOrder = [];
-  unvisitedNodes.push(startNode);
+
   while (unvisitedNodes.length !== 0) {
     let closestNode: Cell | undefined = unvisitedNodes.shift();
-    visited.push(closestNode);
+
     if (closestNode?.isWall) continue;
-    if (closestNode === finishNode) return visitedNodesInOrder;
+    if (closestNode === finishNode) {
+      return {
+        path: getNodesInShortestPathOrderBFS(finishNode),
+        visitedNodes: visitedNodesInOrder,
+      };
+    }
     visitedNodesInOrder.push(closestNode);
     if (closestNode) {
       closestNode.isVisited = true;
@@ -27,7 +32,7 @@ export function breadthFirstSearch(startNode: Cell, finishNode: Cell) {
       }
     }
   }
-  return visitedNodesInOrder;
+  return { path: [], visitedNodes: visitedNodesInOrder };
 }
 
 function getUnvisitedNeighbours(node: Cell) {

@@ -1,10 +1,11 @@
+import { observer } from "mobx-react";
 import { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { AlgorithmContextType, AlgorithmsContext } from '../../contexts/AlgorithmsContext';
+import { useStores } from "../../hooks/useStores";
 import { AlgorithmTypes } from "../../types/algorithm";
 
 const pathfinding = [
@@ -16,15 +17,17 @@ const pathfinding = [
 
 
 const Header = () => {
-    const { currentAlgorithm, setCurrentAlgorithm, isResetClicked, setIsResetClicked, isVisualizeClicked, setIsVisualizeClicked } = useContext(AlgorithmsContext) as AlgorithmContextType;
-
-
+    const { algorithmsStore: { currentAlgorithm, isVisualizeClicked, setIsResetClicked, setIsVisualizeClicked, setCurrentAlgorithm } } = useStores();
 
     const handleVisualize = () => {
         const hasPath = document.querySelectorAll('.node')
         if (hasPath.length <= 0) {
-            setIsVisualizeClicked(true)
+            setIsVisualizeClicked(true);
         }
+    }
+
+    const handleReset = () => {
+        if (!isVisualizeClicked) setIsResetClicked(true)
     }
 
     return (
@@ -38,14 +41,16 @@ const Header = () => {
 
                     <Nav className="me-auto">
                         <Button variant={isVisualizeClicked ? "danger" : "primary"} onClick={handleVisualize}>Visualize</Button>
-                        <Nav.Link onClick={() => setIsResetClicked(true)}>Reset</Nav.Link>
+                        <Nav.Link onClick={handleReset}>Reset</Nav.Link>
                     </Nav>
 
                     <Nav>
                         <NavDropdown title="Pathfinding" id="collasible-nav-dropdown">
+                            <div>
                             {pathfinding.map(algorithm => <NavDropdown.Item key={algorithm.name} onClick={() => setCurrentAlgorithm(algorithm.type)} active={currentAlgorithm === algorithm.type}>
                                 {algorithm.name}
                             </NavDropdown.Item>)}
+                            </div>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
@@ -54,4 +59,4 @@ const Header = () => {
     )
 }
 
-export default Header
+export default observer(Header);

@@ -1,17 +1,16 @@
-import React from "react";
-import { Pathfinder } from "./components";
+import { Pathfinder } from "./pages";
 import Header from "./components/Navbar/Header";
-
-import { AlgorithmsProvider } from "./contexts/AlgorithmsContext";
+import { StoreProvider } from "./stores";
+import { RootStore } from "./stores/RootStore";
 
 function App() {
   return (
-    <AlgorithmsProvider>
+    <StoreProvider store={new RootStore()}>
       <>
         <Header />
-      <Pathfinder />
+        <Pathfinder />
       </>
-    </AlgorithmsProvider>
+    </StoreProvider>
   );
 }
 

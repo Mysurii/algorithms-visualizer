@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Flex } from "../globalStyles";
+import { Flex } from "../../../components/globalStyles";
 
 export const Container = styled.div`
   display: flex;
@@ -23,8 +23,8 @@ export const GridContainer = styled.div`
 `;
 
 export const SideNavContainer = styled.div`
-  width: 60%;
-  margin: 5vh 0;
+  width: 40%;
+  margin: 2vh 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -35,14 +35,7 @@ export const IconContainer = styled.div`
   display: flex;
 `;
 
-export const Text = styled.p`
-  font-size: 1.5rem;
-  user-select: none;
-  margin: ${(props) => props.margin};
-`;
-
 export const StyledFlex = styled(Flex)`
-  justify-content: space-between;
   align-items: center;
   border: none;
   height: 100px !important;
@@ -50,16 +43,11 @@ export const StyledFlex = styled(Flex)`
   align-items: center;
   height: 100%;
   position: relative;
-  cursor: pointer;
   border-bottom: ${(props) => (props.isActive ? "2px solid #0275d8" : "")};
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
+  user-select: none;
 `;
 
-export const Highlight = styled(Text)`
+export const Highlight = styled.p`
   font-size: 1.4rem;
   color: #0275d8;
   font-weight: bold;
