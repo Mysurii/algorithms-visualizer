@@ -1,6 +1,6 @@
+import { initializeGrid } from "./../utils/sortingUtils";
 import { NODE_END_COL, NODE_START_COL, NODE_START_ROW } from "../models/Cell";
 import { ICoordinates } from "../types/Coordinates";
-import { initializeGrid } from "../utils/sortingUtils";
 import { makeAutoObservable, runInAction } from "mobx";
 import Cell, { NODE_END_ROW } from "../models/Cell";
 
@@ -35,6 +35,22 @@ export class GridStore implements IGridStore {
       this.grid = initializeGrid();
       this.setStart();
       this.setFinish();
+    });
+  };
+
+  resetKeepWalls = () => {
+    runInAction(() => {
+      const grid = initializeGrid();
+      for (let rows of this.grid) {
+        for (let col of rows) {
+          const newCell = new Cell(col.x, col.y);
+          newCell.isWall = col.isWall;
+          newCell.isStart = col.isStart;
+          newCell.isEnd = col.isEnd;
+          grid[col.x][col.y] = newCell;
+        }
+      }
+      this.grid = grid;
     });
   };
 

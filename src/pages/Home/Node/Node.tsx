@@ -5,14 +5,14 @@ import Cell from "../../../models/Cell";
 import { MouseType } from "../../../types/Coordinates";
 import { FinishIcon, StartIcon, StyledNode } from "./Node.styles";
 
-interface props {
+interface IProps {
   col: Cell,
   onMouseDown: Function,
   onMouseEnter: Function,
   onMouseUp: Function
 }
 
-const Node: React.FC<props> = ({ col, onMouseDown, onMouseEnter, onMouseUp }) => {
+const Node: React.FC<IProps> = ({ col, onMouseDown, onMouseEnter, onMouseUp }) => {
 
   const { gridStore: { setFinish, setStart } } = useStores();
 
@@ -43,7 +43,7 @@ const Node: React.FC<props> = ({ col, onMouseDown, onMouseEnter, onMouseUp }) =>
         isEnd={col.isEnd}
         isWall={col.isWall}
         onMouseDown={handleMouseDown}
-        onMouseEnter={(e: MouseEvent) => onMouseEnter(e, col.x, col.y)}
+        onMouseEnter={() => onMouseEnter(col.x, col.y)}
         onMouseUp={() => onMouseUp(col.x, col.y)}
         onContextMenu={(e: MouseEvent) => e.preventDefault()}
       >

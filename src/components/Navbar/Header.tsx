@@ -20,8 +20,7 @@ const Header = () => {
     const { algorithmsStore: { currentAlgorithm, isVisualizeClicked, setIsResetClicked, setIsVisualizeClicked, setCurrentAlgorithm } } = useStores();
 
     const handleVisualize = () => {
-        const hasPath = document.querySelectorAll('.node')
-        if (hasPath.length <= 0) {
+        if (!isVisualizeClicked) {
             setIsVisualizeClicked(true);
         }
     }

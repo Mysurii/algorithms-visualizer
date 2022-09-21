@@ -15,7 +15,7 @@ const Pathfinder: React.FC = () => {
   const [isErase, setIsErase] = useState(false);
 
   const { algorithmsStore: { currentAlgorithm, isResetClicked, isVisualizeClicked, setIsResetClicked, setIsVisualizeClicked },
-    gridStore: { grid, resetGrid, updateGridWithWalls, startCoordinates, finishCoordinates }
+    gridStore: { grid, resetGrid, resetKeepWalls, updateGridWithWalls, startCoordinates, finishCoordinates }
   } = useStores();
 
   const handleType = (row: number, col: number) => {
@@ -34,7 +34,7 @@ const Pathfinder: React.FC = () => {
     handleType(row, col)
   };
 
-  const handleMouseEnter = (ev: React.MouseEvent, row: number, col: number) => {
+  const handleMouseEnter = (row: number, col: number) => {
     if (!mouseIsPressed || isVisualizeClicked) return;
     handleType(row, col);
   };
@@ -90,18 +90,28 @@ const Pathfinder: React.FC = () => {
     })
   }
 
+  const removeColors = () => {
+    const nodes = document.querySelectorAll(".node")
+    nodes.forEach(node => node.classList.remove("node", "node-visited", "node-shortest-path"))
+  }
+
 
   const handleReset = () => {
     if (isResetClicked) {
       resetGrid();
-      const nodes = document.querySelectorAll(".node")
-      nodes.forEach(node => node.classList.remove("node", "node-visited", "node-shortest-path"))
+      removeColors();
       setIsResetClicked(false)
     }
   }
 
   const handleVisualize = async () => {
+    console.log('vusualizing')
     if (isVisualizeClicked) {
+      const nodes = document.querySelectorAll(".node")
+      if (nodes.length > 0) {
+        removeColors();
+        resetKeepWalls();
+      }
       await visualizePath()
       setIsVisualizeClicked(false)
     }
