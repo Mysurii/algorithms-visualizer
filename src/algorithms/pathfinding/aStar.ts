@@ -1,5 +1,5 @@
 import Cell from "../../models/Cell";
-import { heuristic } from "../../utils/sortingUtils";
+import { heuristic } from "../../utils/pathfindingUtils";
 
 export const aStar = (
   startNode: Cell,

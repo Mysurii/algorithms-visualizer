@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react-lite"
-import { useStores } from "../../../hooks/useStores";
+import { useStores } from "../../../utils/hooks/useStores";
 import Cell from "../../../models/Cell";
 import { MouseType } from "../../../types/Coordinates";
 import { FinishIcon, StartIcon, StyledNode } from "./Node.styles";

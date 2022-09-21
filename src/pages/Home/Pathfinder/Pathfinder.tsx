@@ -4,7 +4,7 @@ import Node from "../Node/Node";
 import { Container, GridContainer, Highlight, Row, SideNavContainer, StyledFlex } from "./Pathfinder.styles";
 import { AlgorithmTypes } from "../../../types/algorithm";
 import { breadthFirstSearch } from "../../../algorithms/pathfinding/breadtFirstSearch";
-import { useStores } from "../../../hooks/useStores";
+import { useStores } from "../../../utils/hooks/useStores";
 import { observer } from "mobx-react-lite";
 import { FinishIcon, StartIcon, StyledNode } from "../Node/Node.styles";
 import Cell from "../../../models/Cell";

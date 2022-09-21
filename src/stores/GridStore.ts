@@ -1,4 +1,4 @@
-import { initializeGrid } from "./../utils/sortingUtils";
+import { initializeGrid } from "./../utils/pathfindingUtils";
 import { NODE_END_COL, NODE_START_COL, NODE_START_ROW } from "../models/Cell";
 import { ICoordinates } from "../types/Coordinates";
 import { makeAutoObservable, runInAction } from "mobx";
