@@ -86,7 +86,7 @@ const Header = () => {
                         <Nav.Link onClick={handleReset}>Reset</Nav.Link>
                     </Nav> :
                         <Nav className="me-auto">
-                            <Button variant={isVisualizeClicked ? "danger" : "primary"} onClick={handleSort}>Sort</Button>
+                            <Button variant={isVisualizeClicked ? "danger" : "primary"} onClick={handleSort}>Sort Array</Button>
                             <Nav.Link onClick={newArray}>New Array</Nav.Link>
                         </Nav>
                     }
