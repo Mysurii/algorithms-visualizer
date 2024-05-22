@@ -1,2 +1,2 @@
-[See example](https://visualize-algorithmss.netlify.app/)
+[Live example](https://visualize-algorithmss.netlify.app/)
 
